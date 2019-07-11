@@ -16,7 +16,6 @@ class SignupVC: UIViewController {
     @IBOutlet weak var passwordTextField: UITextFieldX!
     @IBOutlet weak var confirmPaddwordTextField: UITextFieldX!
     
-    var name, email, mobile, password, cpassword: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +27,20 @@ class SignupVC: UIViewController {
         do {
             try register()
             
+            let dictUser: [String:Any] = [PredifineKeys.nameKey: nameTextField.text!, PredifineKeys.emailKey: emailTextField.text!, PredifineKeys.phoneKey: mobileTextField.text!, PredifineKeys.passwordKey: passwordTextField.text!]
+            
+            if ManageCoreData().checkUserExist(email: emailTextField.text!){
+                ManageCoreData().insertUserRecord(dictData: dictUser)
+                self.showAlert(title: "", message: "SignIn successfully")
+                self.navigationController?.popViewController(animated: true)
+            }else{
+                self.showAlert(title: "", message: "This user is already exist")
+            }
+            
+            
+            
         } catch RegisterError.incompleteForm {
-            showAlert(title: "Incomplete Form", message: "Please fill All fields.")
+            showAlert(title: "Incomplete Form", message: "Please fill all fields.")
         } catch RegisterError.invalidEmail {
             showAlert(title: "Invalid Email Format", message: "Please make sure you formt your email correctly")
         } catch RegisterError.invalidMobile {
@@ -48,11 +59,11 @@ class SignupVC: UIViewController {
 extension SignupVC {
     fileprivate func register() throws {
         
-         name = nameTextField.text!
-         email = emailTextField.text!
-         mobile = mobileTextField.text!
-         password = passwordTextField.text!
-         cpassword = confirmPaddwordTextField.text!
+         let name = nameTextField.text!
+         let email = emailTextField.text!
+         let mobile = mobileTextField.text!
+         let password = passwordTextField.text!
+         let cpassword = confirmPaddwordTextField.text!
         
         if name.isEmpty || email.isEmpty || mobile.isEmpty || password.isEmpty || cpassword.isEmpty {
             throw RegisterError.incompleteForm

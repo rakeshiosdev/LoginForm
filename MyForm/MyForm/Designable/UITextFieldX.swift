@@ -38,6 +38,7 @@ class UITextFieldX: UITextField {
         didSet {
             let placeholder = NSAttributedString(string: placeholderX, attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
             self.attributedPlaceholder = placeholder
+            self.autocorrectionType = .no
         }
     }
     
